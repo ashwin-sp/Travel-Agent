@@ -1,0 +1,34 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="actio.ashcompany.com.travelagentv11.About_us"
+    >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="5000dp"
+        android:id="@+id/scrollView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:fadeScrollbars="false">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Our application aims at helping people plan for a tourism better. This application is a prototype with details about 3 cities included here. We have included details about the cities, the places one can visit in the city, possible tourist operators to choose from and finally a feature to register for that place as well.
+Another feature we have added is that the application allows for user registration and subsequent login so that the user can check his registration details personally.
+We have utilised SQLite database for storing and retrieving data. By means of retrieving data, we can send information of registration as a proof to your mobile. This SMS information would include the place you registered for, name, unique register number known to the administrator only.
+Also the details of the place that you have registered for disappears soon so that you can register again for the same place. But the proof would be in the SMS. This is only a prototype. In the future, we are going to include separate credentials for administrator for viewing the full details of all users registered. Further we are planning to display map for each city upon the click of a button. And we are going to add more features.
+We are also going to rig up the registration process a bit more by adding the fields for users to enter the date and time of travel and the mode of travel. :)
+The unique thing in our application would be that the user would be able to view details of each and every place that we can visit and also in future, we will be including a feature to register for individual places in the city which is actually not found in the applications of today.
+Also we have included only hyperlinks to the best links for information about places and tourist operators. In the future, we would be including activities for the same, for better results. To conclude, the home screen is voice recognition controlled to go to the various menus. If the voice support is not there in your mobile, then you are free to use the menu button in the middle of that screen "
+            android:id="@+id/textView17"
+            android:layout_alignTop="@+id/scrollView"
+            android:layout_centerHorizontal="true" />
+    </ScrollView>
+
+</RelativeLayout>
