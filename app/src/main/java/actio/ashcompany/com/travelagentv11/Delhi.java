@@ -35,10 +35,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+
+import actio.ashcompany.com.travelagentv11.retrofit.RetrofitCallBuilder;
 
 public class Delhi extends Activity {
     private DrawerLayout mDrawerLayout;
@@ -59,6 +63,9 @@ public class Delhi extends Activity {
         }
 
         setContentView(R.layout.activity_delhi);
+
+        RetrofitCallBuilder.INSTANCE.initRetroBuilder();
+        RetrofitCallBuilder.INSTANCE.getData(getResources().getString(R.string.key), getResources().getString(R.string.cx), "vivekananda+statue+chennai");
 
         mTitle = mDrawerTitle = getTitle();
         mPlanetTitles = getResources().getStringArray(R.array.delhi_array);
@@ -215,6 +222,7 @@ public class Delhi extends Activity {
             ImageButton i6= (ImageButton) rootView.findViewById(R.id.imageButton6);
             ImageButton i7= (ImageButton) rootView.findViewById(R.id.imageButton7);
             ImageButton i8= (ImageButton) rootView.findViewById(R.id.imageButton8);
+
             ScrollView sv= (ScrollView) rootView.findViewById(R.id.scrollView3);
             Button b4= (Button) rootView.findViewById(R.id.button4);
 
@@ -224,6 +232,7 @@ public class Delhi extends Activity {
             t3.setVisibility(View.GONE);
             t4.setVisibility(View.GONE);
             sv.setVisibility(View.GONE);
+
             if(delhi.equals("About Delhi"))
             {
                 getActivity().setTitle(delhi);

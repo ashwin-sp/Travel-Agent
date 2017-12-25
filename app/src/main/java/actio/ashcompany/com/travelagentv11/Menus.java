@@ -7,7 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Window;
 
-import Adapter.Tabs;
+import actio.ashcompany.com.travelagentv11.adapter.Tabs;
 
 public class Menus extends FragmentActivity implements ActionBar.TabListener {
 
