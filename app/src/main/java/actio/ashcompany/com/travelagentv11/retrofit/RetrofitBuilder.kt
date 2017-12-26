@@ -1,7 +1,9 @@
 package actio.ashcompany.com.travelagentv11.retrofit
 
+import actio.ashcompany.com.travelagentv11.callback.ImageCallback
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,6 +20,7 @@ object RetrofitCallBuilder: Callback<String>
    private lateinit var loggingInterceptor: HttpLoggingInterceptor
     private lateinit var okHttpClient: OkHttpClient
     private lateinit var retrofitBuilder: Retrofit
+    private lateinit var imageCallback: ImageCallback
     fun initRetroBuilder()
     {
         loggingInterceptor = HttpLoggingInterceptor()
@@ -32,9 +35,10 @@ object RetrofitCallBuilder: Callback<String>
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .build()
     }
-    fun getData(key:String, cx: String, query: String)
+    fun getData(key:String, cx: String, query: String, callback: ImageCallback)
     {
         val getAPI = retrofitBuilder.create(RetrofitCalls::class.java)
+        imageCallback = callback
         val call =  getAPI.getData(key, cx, query)
         try {
             call.enqueue(this)
@@ -45,6 +49,10 @@ object RetrofitCallBuilder: Callback<String>
     }
     override fun onResponse(call: Call<String>?, response: Response<String>?) {
         System.out.println("Response Body ==> "+ response!!.body())
+        val jresponse = JSONObject(response.body())
+        val items = jresponse.getJSONArray("items")
+        val firstObject = items.getJSONObject(0)
+        imageCallback.updateImage(firstObject.getString("link"))
     }
 
     override fun onFailure(call: Call<String>?, t: Throwable?) {
