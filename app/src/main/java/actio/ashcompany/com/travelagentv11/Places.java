@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -26,33 +27,50 @@ public class Places extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_places, container, false);
 
-        Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        final Spinner spinner = rootView.findViewById(R.id.spinner);
+
+        final Button fly = rootView.findViewById(R.id.fly);
+
+        fly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String selection = spinner.getSelectedItem().toString();
+                System.out.println("item ==> "+ selection );
+                if (selection.equals("Delhi")) {
+                    Intent i = new Intent(getActivity(), Delhi.class);
+                    getActivity().startActivity(i);
+                }
+
+                else if (selection.equals("Chennai")) {
+                    Intent i = new Intent(getActivity(), Chennai.class);
+                    getActivity().startActivity(i);
+                }
+
+                else if (selection.equals("Bangalore")) {
+                    Intent i = new Intent(getActivity(), Bangalore.class);
+                    getActivity().startActivity(i);
+                }
+                else
+                {
+                    fly.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                    String item = parent.getItemAtPosition(position).toString();
+                String item = parent.getItemAtPosition(position).toString();
                 if(!item.equals("Select a place")) {
-                    Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+                   // Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+                    fly.setVisibility(View.VISIBLE);
                 }
-                    if (item.equals("Delhi")) {
-                        Intent i = new Intent(getActivity(), Delhi.class);
-                        getActivity().startActivity(i);
-                    }
-
-                    else if (item.equals("Chennai")) {
-                        Intent i = new Intent(getActivity(), Chennai.class);
-                        getActivity().startActivity(i);
-                    }
-
-                    else if (item.equals("Bangalore")) {
-                        Intent i = new Intent(getActivity(), Bangalore.class);
-                        getActivity().startActivity(i);
-                    }
-
-
+                else
+                {
+                    fly.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -60,6 +78,7 @@ public class Places extends Fragment {
 
             }
         });
+
 
 
         // Spinner Drop down elements
@@ -78,6 +97,7 @@ public class Places extends Fragment {
 
         // attaching data adapter to spinner
         spinner.setAdapter(dataAdapter);
+
         return rootView;
     }
 

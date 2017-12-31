@@ -5,16 +5,15 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.telephony.SmsManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -28,15 +27,16 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import actio.ashcompany.com.travelagentv11.adapter.PlacesAdapter;
+import actio.ashcompany.com.travelagentv11.model.PlacesPOJO;
 
 /**
  * Created by admin on 4/7/2015.
@@ -61,7 +61,7 @@ public class Chennai extends Activity {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
         }
 
-        setContentView(R.layout.activity_chennai);
+        setContentView(R.layout.activity_delhi);
 
         mTitle = mDrawerTitle = getTitle();
         mPlanetTitles = getResources().getStringArray(R.array.Chennai_array);
@@ -196,6 +196,8 @@ public class Chennai extends Activity {
      */
     public static class PlanetFragment extends Fragment {
         public static final String ARG_PLANET_NUMBER = "planet_number";
+        ArrayList<PlacesPOJO> arrayList = new ArrayList<>();
+        PlacesAdapter placesAdapter;
 
         public PlanetFragment() {
             // Empty constructor required for fragment subclasses
@@ -205,20 +207,40 @@ public class Chennai extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View rootView = inflater.inflate(R.layout.fragment_chennai, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_single_place, container, false);
             int i = getArguments().getInt(ARG_PLANET_NUMBER);
             final String chennai= getResources().getStringArray(R.array.Chennai_array)[i];
             TextView t= (TextView) rootView.findViewById(R.id.textView18);
             final TextView t2= (TextView) rootView.findViewById(R.id.textView19);
             final TextView t3= (TextView) rootView.findViewById(R.id.textView20);
             final TextView t4= (TextView) rootView.findViewById(R.id.textView21);
-            ImageButton i3= (ImageButton) rootView.findViewById(R.id.imageButton3);
+          /*  ImageButton i3= (ImageButton) rootView.findViewById(R.id.imageButton3);
             ImageButton i4= (ImageButton) rootView.findViewById(R.id.imageButton4);
             ImageButton i5= (ImageButton) rootView.findViewById(R.id.imageButton5);
             ImageButton i6= (ImageButton) rootView.findViewById(R.id.imageButton6);
             ImageButton i7= (ImageButton) rootView.findViewById(R.id.imageButton7);
-            ImageButton i8= (ImageButton) rootView.findViewById(R.id.imageButton8);
-            ScrollView sv= (ScrollView) rootView.findViewById(R.id.scrollView3);
+            ImageButton i8= (ImageButton) rootView.findViewById(R.id.imageButton8);*/
+
+            RecyclerView sv= rootView.findViewById(R.id.scrollView3);
+            sv.setHasFixedSize(true);
+
+            // use a Grid layout manager
+            GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
+            sv.setLayoutManager(mLayoutManager);
+
+
+            arrayList.add(new PlacesPOJO("Marina Beach", "http://s3.india.com/travel/wp-content/uploads/2014/10/Marina.jpg","http://www.chennai.org.uk/beaches/marina-beach.html" ));
+            arrayList.add(new PlacesPOJO("MGR Memorial","http://img1.holidayiq.com/images/attractions/1344443750_8481.jpg","http://www.chennai.org.uk/monuments/mgr-memorial.html" ));
+            arrayList.add(new PlacesPOJO("Vivekanandha Building","http://s3.amazonaws.com/vivekanandahouse.org_media/wp-content/uploads/2011/05/12154525/VHouse.jpg", "http://www.vivekanandahouse.org/"));
+            arrayList.add(new PlacesPOJO("Ripon Building","http://im.hunt.in/cg/chennai/City-Guide/ripon.jpg", "http://www.chennaionline.in/city-guide/ripon-building-in-chennai"));
+            arrayList.add(new PlacesPOJO("MA Chidambaram Stadium","http://im.hunt.in/cg/chennai/City-Guide/MA%20Stadium.jpg", "http://www.chennaionline.in/city-guide/ma-chidambaram-stadium-in-chennai"));
+            arrayList.add(new PlacesPOJO("Fisherman's Cove","https://vivanta.tajhotels.com/content/dam/vivanta/hotels/VBT-Fisherman's_Cove/images/Quick_Peek/Cottages_16x7-02-Copy.jpg.transform.heroHomeDesktop2x.image.jpg", "http://www.vivantabytaj.com/fishermans-cove-chennai/overview.html"));
+
+
+            placesAdapter = new PlacesAdapter(arrayList, getActivity());
+            sv.setAdapter(placesAdapter);
+            placesAdapter.notifyDataSetChanged();
+
             Button b4= (Button) rootView.findViewById(R.id.button4);
             b4.setVisibility(View.GONE);
             t2.setVisibility(View.GONE);
@@ -261,7 +283,7 @@ public class Chennai extends Activity {
             {
                 getActivity().setTitle(chennai);
                 sv.setVisibility(View.VISIBLE);
-                i3.setOnClickListener(new View.OnClickListener() {
+              /*  i3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.chennai.org.uk/beaches/marina-beach.html"));
@@ -302,7 +324,7 @@ public class Chennai extends Activity {
                         Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.vivantabytaj.com/fishermans-cove-chennai/overview.html"));
                         startActivity(i);
                     }
-                });
+                });*/
             }
             else if(chennai.equals("Register")) {
                 getActivity().setTitle(chennai);
@@ -335,6 +357,7 @@ public class Chennai extends Activity {
                             catch(Exception e)
                             {
                                 e.printStackTrace();
+                                Toast.makeText(getActivity(), "Registered successfully", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }

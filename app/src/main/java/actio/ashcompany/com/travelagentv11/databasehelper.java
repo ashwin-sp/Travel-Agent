@@ -68,6 +68,8 @@ public class databasehelper extends SQLiteOpenHelper {
         }catch(Exception e){
             e.printStackTrace();
             return no_such_data;
+        } finally {
+            this.close();
         }
     }
     public String getyourdata1(String user, String pass) {
@@ -101,6 +103,9 @@ public class databasehelper extends SQLiteOpenHelper {
             e.printStackTrace();
             return no_such_data;
         }
+        finally {
+            this.close();
+        }
     }
     public int getyourdata2(String user, String pass) {
         SQLiteDatabase sb=this.getReadableDatabase();
@@ -125,13 +130,15 @@ public class databasehelper extends SQLiteOpenHelper {
             data = c.getInt(c.getColumnIndex("reg"));
             c.close();
             if(i <= 0){
-
                 return no_such_data;
             }
             return data;
         }catch(Exception e){
             e.printStackTrace();
             return no_such_data;
+        }
+        finally {
+            this.close();
         }
     }
     /*

@@ -5,17 +5,15 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.telephony.SmsManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -29,23 +27,16 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
 
-import actio.ashcompany.com.travelagentv11.callback.ImageCallback;
-import actio.ashcompany.com.travelagentv11.retrofit.RetrofitCallBuilder;
+import actio.ashcompany.com.travelagentv11.adapter.PlacesAdapter;
+import actio.ashcompany.com.travelagentv11.model.PlacesPOJO;
 
 public class Delhi extends Activity {
     private DrawerLayout mDrawerLayout;
@@ -202,6 +193,8 @@ public class Delhi extends Activity {
      */
     public static class PlanetFragment extends Fragment {
         public static final String ARG_PLANET_NUMBER = "planet_number";
+        ArrayList<PlacesPOJO> arrayList = new ArrayList<>();
+        PlacesAdapter placesAdapter;
 
         public PlanetFragment() {
             // Empty constructor required for fragment subclasses
@@ -211,21 +204,21 @@ public class Delhi extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View rootView = inflater.inflate(R.layout.fragment_delhi, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_single_place, container, false);
             int i = getArguments().getInt(ARG_PLANET_NUMBER);
             final String delhi= getResources().getStringArray(R.array.delhi_array)[i];
             TextView t= (TextView) rootView.findViewById(R.id.textView18);
             final TextView t2= (TextView) rootView.findViewById(R.id.textView19);
             final TextView t3= (TextView) rootView.findViewById(R.id.textView20);
             final TextView t4= (TextView) rootView.findViewById(R.id.textView21);
-            final ImageButton i3= (ImageButton) rootView.findViewById(R.id.imageButton3);
+          /*  final ImageButton i3= (ImageButton) rootView.findViewById(R.id.imageButton3);
             ImageButton i4= (ImageButton) rootView.findViewById(R.id.imageButton4);
             ImageButton i5= (ImageButton) rootView.findViewById(R.id.imageButton5);
             ImageButton i6= (ImageButton) rootView.findViewById(R.id.imageButton6);
             ImageButton i7= (ImageButton) rootView.findViewById(R.id.imageButton7);
-            ImageButton i8= (ImageButton) rootView.findViewById(R.id.imageButton8);
+            ImageButton i8= (ImageButton) rootView.findViewById(R.id.imageButton8);*/
 
-            RetrofitCallBuilder.INSTANCE.initRetroBuilder();
+/*            RetrofitCallBuilder.INSTANCE.initRetroBuilder();
             RetrofitCallBuilder.INSTANCE.getData(getResources().getString(R.string.key), getResources().getString(R.string.cx), "red+fort+delhi", new ImageCallback() {
                 @Override
                 public void updateImage(@NotNull String url) {
@@ -234,10 +227,29 @@ public class Delhi extends Activity {
                             .load(url)
                             .into(i3);
                 }
-            });
+            });*/
 
-            ScrollView sv= (ScrollView) rootView.findViewById(R.id.scrollView3);
-            Button b4= (Button) rootView.findViewById(R.id.button4);
+            RecyclerView sv= rootView.findViewById(R.id.scrollView3);
+            sv.setHasFixedSize(true);
+
+            // use a Grid layout manager
+            GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
+            sv.setLayoutManager(mLayoutManager);
+
+
+            arrayList.add(new PlacesPOJO("Red Fort", "https://img.theculturetrip.com/wp-content/uploads/2016/05/hctp0003-india-delhi-red-fort-10.jpg","http://www.redfortdelhi.co.in/" ));
+            arrayList.add(new PlacesPOJO("Jama Masjid","http://www.culturalindia.net/iliimages/Jama-Masjid-ili-51-img-1.jpg","http://www.jamamasjid.in/" ));
+            arrayList.add(new PlacesPOJO("Lotus Temple","http://bahaiteachings.org/wp-content/uploads/2015/07/Bahai-House-of-Worship-in-Wilmette.jpg", "http://www.bahaihouseofworship.in/"));
+            arrayList.add(new PlacesPOJO("Qutub Minar","http://amazingindiablog.in/wp-content/uploads/2016/06/Qutub-Minar-Delhi.jpg", "http://www.qutubminar.org/"));
+            arrayList.add(new PlacesPOJO("India Gate","http://cloud.transindiatravels.com/wp-content/uploads/india-gate-1.jpg", "http://www.delhitourism.gov.in/delhitourism/tourist_place/india_gate.jsp"));
+            arrayList.add(new PlacesPOJO("Humayun Tomb","https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Humayun%27s_Tomb_from_the_Charbagh_-_1.jpg/2880px-Humayun%27s_Tomb_from_the_Charbagh_-_1.jpg", "http://asi.nic.in/asi_monu_whs_humayuntomb.asp"));
+
+
+            placesAdapter = new PlacesAdapter(arrayList, getActivity());
+            sv.setAdapter(placesAdapter);
+            placesAdapter.notifyDataSetChanged();
+
+            Button b4=  rootView.findViewById(R.id.button4);
 
             b4.setVisibility(View.GONE);
 
@@ -285,7 +297,9 @@ public class Delhi extends Activity {
             {
                 getActivity().setTitle(delhi);
                 sv.setVisibility(View.VISIBLE);
-                i3.setOnClickListener(new View.OnClickListener() {
+
+
+                /*            i3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.redfortdelhi.co.in/"));
@@ -326,7 +340,7 @@ public class Delhi extends Activity {
                         Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://asi.nic.in/asi_monu_whs_humayuntomb.asp"));
                         startActivity(i);
                     }
-                });
+                });*/
             }
             else if(delhi.equals("Register")) {
                 getActivity().setTitle(delhi);
@@ -359,6 +373,7 @@ public class Delhi extends Activity {
                             catch(Exception e)
                             {
                                 e.printStackTrace();
+                                Toast.makeText(getActivity(), "Registered successfully", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }

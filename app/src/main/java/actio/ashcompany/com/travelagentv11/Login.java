@@ -93,6 +93,8 @@ public class Login extends Activity {
         }catch(Exception e){
             e.printStackTrace();
             return false;
+        } finally {
+            db.close();
         }
     }//validate Login
     public void onBackPressed() {
