@@ -12,12 +12,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class databasehelper extends SQLiteOpenHelper {
 
 
-    private static int DB_VERSION = 1;
+    private static int DB_VERSION = 2;
     private static String DB_NAME = "Travel2.db";
     Context c = null;
     String userName;
     String userPass;
-
 
     public databasehelper(Context c)
     {
@@ -30,7 +29,6 @@ public class databasehelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table LOGGER (name TEXT,age NUMBER,gender TEXT,address TEXT,username TEXT,password TEXT,reg NUMBER,phno NUMBER)");
-
     }
 
     @Override
