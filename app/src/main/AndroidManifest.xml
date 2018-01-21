@@ -31,7 +31,8 @@
         </activity>
         <activity
             android:name=".Login"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.AppCompat.Light"></activity>
         <activity
             android:name=".Register"
             android:label="@string/title_activity_register"></activity>
@@ -61,15 +62,18 @@
         <activity
             android:name=".Delhi"
             android:icon="@drawable/ic_action_name_delhi"
-            android:label="@string/title_activity_delhi"></activity>
+            android:label="@string/title_activity_delhi"
+            android:theme="@style/Theme.AppCompat.Light"></activity>
         <activity
             android:name=".Chennai"
             android:icon="@drawable/chennai"
-            android:label="@string/title_activity_Chennai"></activity>
+            android:label="@string/title_activity_Chennai"
+            android:theme="@style/Theme.AppCompat.Light"></activity>
         <activity
             android:name=".Bangalore"
             android:icon="@drawable/bang"
-            android:label="@string/title_activity_bangalore"></activity>
+            android:label="@string/title_activity_bangalore"
+            android:theme="@style/Theme.AppCompat.Light"></activity>
     </application>
 
 </manifest>

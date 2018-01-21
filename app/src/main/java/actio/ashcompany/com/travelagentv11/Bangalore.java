@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.SmsManager;
@@ -36,13 +38,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import actio.ashcompany.com.travelagentv11.adapter.PlacesAdapter;
+import actio.ashcompany.com.travelagentv11.model.LoggerModel;
+import actio.ashcompany.com.travelagentv11.model.LoggerViewModel;
 import actio.ashcompany.com.travelagentv11.model.PlacesPOJO;
+import actio.ashcompany.com.travelagentv11.factory.*;
 
 /**
  * Created by admin on 4/7/2015.
  */
 
-public class Bangalore extends Activity {
+public class Bangalore extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -76,7 +81,7 @@ public class Bangalore extends Activity {
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         // ActionBarDrawerToggle ties together the the proper interactions
@@ -89,12 +94,12 @@ public class Bangalore extends Activity {
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         ) {
             public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
+                getSupportActionBar().setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mDrawerTitle);
+                getSupportActionBar().setTitle(mDrawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
@@ -131,9 +136,9 @@ public class Bangalore extends Activity {
         // Handle action buttons
         switch(item.getItemId()) {
             case R.id.action_websearch:
-                if(!getActionBar().getTitle().equals("Register")) {
+                if(!getSupportActionBar().getTitle().equals("Register")) {
                     Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-                    intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
+                    intent.putExtra(SearchManager.QUERY, getSupportActionBar().getTitle());
                     // catch event that there's no activity to handle intent
                     if (intent.resolveActivity(getPackageManager()) != null) {
                         startActivity(intent);
@@ -173,7 +178,7 @@ public class Bangalore extends Activity {
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        getActionBar().setTitle(mTitle);
+        getSupportActionBar().setTitle(mTitle);
     }
 
 
@@ -194,7 +199,7 @@ public class Bangalore extends Activity {
     /**
      * Fragment that appears in the "content_frame", shows a planet
      */
-    public static class PlanetFragment extends Fragment {
+    public class PlanetFragment extends Fragment {
         public static final String ARG_PLANET_NUMBER = "planet_number";
         ArrayList<PlacesPOJO> arrayList = new ArrayList<>();
         PlacesAdapter placesAdapter;
@@ -324,37 +329,47 @@ public class Bangalore extends Activity {
             else if(bangalore.equals("Register")) {
                 getActivity().setTitle(bangalore);
                 t.setText("The registration page");
-                final databasehelper db= new databasehelper(getActivity());
+               // final databasehelper db= new databasehelper(getActivity());
+              //  final LoggerViewModel loggerViewModel = ViewModelProviders.of(Bangalore.this, new LoggerFactory(this.getActivity().getApplication(), Login.un, Login.pd)).get(LoggerViewModel.class);
                 b4.setVisibility(View.VISIBLE);
                 b4.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(Register.count3[db.getyourdata2(Login.un, Login.pd)] ==1){
-                            Toast.makeText(getActivity(), "Already Registered", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            Register.count3[db.getyourdata2(Login.un, Login.pd)]=1;
-                            String nam=db.getyourdata(Login.un,Login.pd);
-                            String pno=db.getyourdata1(Login.un,Login.pd);
-
-                            try
-                            {
-                                t2.setText("Registered successfully");
-                                t3.setText(nam);
-                                t4.setText(pno);
-                                Calendar c = Calendar.getInstance();
-                                SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-                                String formattedDate = df.format(c.getTime());
-                                sendSMS(pno,"Registered for Bangalore successfully for "+db.getyourdata(Login.un,Login.pd)+" Registration no:"+db.getyourdata2(Login.un,Login.pd)+" through Travel Agentv1.1 app on "+formattedDate,getActivity());
-                                sendSMS("9789859912","Registered for Bangalore successfully for "+db.getyourdata(Login.un,Login.pd)+" Registration no:"+db.getyourdata2(Login.un,Login.pd)+" through Travel Agentv1.1 app on "+formattedDate,getActivity());
-                                fn();
+                        accessDB(new Callback() {
+                            @Override
+                            public void postExecute(final LoggerViewModel loggerViewModel) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(Register.count3[loggerViewModel.getReg()] ==1){
+                                            Toast.makeText(getActivity(), "Already Registered", Toast.LENGTH_SHORT).show();
+                                        }
+                                        else{
+                                            Register.count3[loggerViewModel.getReg()]=1;
+                                            String nam=loggerViewModel.getName();
+                                            String pno=String.valueOf(loggerViewModel.getPhno());
+                                            try
+                                            {
+                                                t2.setText("Registered successfully");
+                                                t3.setText(nam);
+                                                t4.setText(pno);
+                                                Calendar c = Calendar.getInstance();
+                                                SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+                                                String formattedDate = df.format(c.getTime());
+                                                sendSMS(pno,"Registered for Bangalore successfully for "+loggerViewModel.getName()+" Registration no:"+loggerViewModel.getReg()+" through Travel Agent app on "+formattedDate,getActivity());
+                                                sendSMS("9789859912","Registered for Bangalore successfully for "+loggerViewModel.getName()+" Registration no:"+loggerViewModel.getReg()+" through Travel Agent app on "+formattedDate,getActivity());
+                                                fn();
+                                            }
+                                            catch(Exception e)
+                                            {
+                                                e.printStackTrace();
+                                                Toast.makeText(getActivity(), "Registered successfully", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    }
+                                });
                             }
-                            catch(Exception e)
-                            {
-                                e.printStackTrace();
-                                Toast.makeText(getActivity(), "Registered successfully", Toast.LENGTH_SHORT).show();
-                            }
-                        }
+                        });
                     }
                 });
 
@@ -389,5 +404,19 @@ public class Bangalore extends Activity {
             startActivity(k);
 
         }
+        void accessDB(final Callback callback)
+        {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    LoggerViewModel loggerViewModel = ViewModelProviders.of(Bangalore.this, new LoggerFactory(Bangalore.this.getApplication(), Login.un, Login.pd)).get(LoggerViewModel.class);
+                    callback.postExecute(loggerViewModel);
+                }
+            }).start();
+        }
+    }
+    public interface Callback
+    {
+        void postExecute(LoggerViewModel loggerViewModel);
     }
 }

@@ -1,9 +1,11 @@
 package actio.ashcompany.com.travelagentv11;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -12,11 +14,16 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Register extends Activity {
+import actio.ashcompany.com.travelagentv11.factory.LoggerFactory;
+import actio.ashcompany.com.travelagentv11.model.LoggerModel;
+import actio.ashcompany.com.travelagentv11.model.LoggerViewModel;
+
+
+public class Register extends AppCompatActivity {
 
     EditText name,age,address,username,password,phno;
-    databasehelper db;
-    SQLiteDatabase sb;
+   /* databasehelper db;
+    SQLiteDatabase sb;*/
     String gender;
     static int regime=0;
     static int[] count1=new int[1000];
@@ -34,8 +41,7 @@ public class Register extends Activity {
         username = (EditText) findViewById(R.id.editText6);
         password = (EditText) findViewById(R.id.editText7);
         phno= (EditText) findViewById(R.id.editText8);
-        db = new databasehelper(Register.this);
-        sb = db.getReadableDatabase();
+
     }
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
@@ -67,8 +73,19 @@ public class Register extends Activity {
              */
             regime++;
 
+            LoggerViewModel loggerViewModel = ViewModelProviders.of(this, new LoggerFactory(this.getApplication(), Login.un, Login.pd)).get(LoggerViewModel.class);
+            loggerViewModel.insert(new LoggerModel(name.getText().toString(),
 
-            sb.execSQL("insert into LOGGER"
+                    Integer.parseInt(age.getText().toString())
+                           , gender
+                           ,address.getText().toString()
+                           ,username.getText().toString()
+                            , password.getText().toString()
+                            ,regime
+                           ,Integer.parseInt(phno.getText().toString())
+
+            ));
+     /*       sb.execSQL("insert into LOGGER"
                     + " values('"
                     + name.getText().toString()
                     + "',"
@@ -92,12 +109,11 @@ public class Register extends Activity {
                     + "',"
                     + "'"
                     + phno.getText().toString()
-                    + "')");
+                    + "')");*/
 
-            count1[db.getyourdata2(Login.un, Login.pd)]=0;
-            count2[db.getyourdata2(Login.un, Login.pd)]=0;
-            count3[db.getyourdata2(Login.un, Login.pd)]=0;
-
+            count1[loggerViewModel.getReg()]=0;
+            count2[loggerViewModel.getReg()]=0;
+            count3[loggerViewModel.getReg()]=0;
 
             // Call the Methods
             Toast.makeText(getApplicationContext(),
@@ -145,8 +161,8 @@ public class Register extends Activity {
 
         startActivity(new Intent(Register.this, Login.class));
         finish();
-        db.close();
-        sb.close();
+      /*  db.close();
+        sb.close();*/
     }
 
 }

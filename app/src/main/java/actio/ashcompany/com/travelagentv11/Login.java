@@ -1,18 +1,26 @@
 package actio.ashcompany.com.travelagentv11;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
 
-public class Login extends Activity {
+import actio.ashcompany.com.travelagentv11.factory.LoggerFactory;
+import actio.ashcompany.com.travelagentv11.model.LoggerViewModel;
+
+
+public class Login extends AppCompatActivity {
 
     EditText username;
     EditText password;
@@ -34,22 +42,33 @@ public class Login extends Activity {
             public void onClick(View v) {
                 un=username.getText().toString();
                 pd=password.getText().toString();
-                boolean validLogin = validateLogin(un, pd);
                 if(un.equals("")){
                     Toast.makeText(getApplicationContext(), "Username Empty", Toast.LENGTH_SHORT).show();
                 }else if(pd.equals("")){
                     Toast.makeText(getApplicationContext(), "Password Empty", Toast.LENGTH_SHORT).show();
                 }else{
-
-                    if(validLogin){
-                        //Show a dialog of login successful
-                        Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
-                        Intent h = new Intent(Login.this, Home.class);
-                        //Close views before starting Dashboard
-                        h.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(h);
-                        finish();
-                    }
+                    validateLogin(un, pd, new ValidateCallback() {
+                        @Override
+                        public void onValidateResult(final boolean result) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(result)
+                                    {
+                                        Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+                                        Intent h = new Intent(Login.this, Home.class);
+                                        //Close views before starting Dashboard
+                                        h.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(h);
+                                        finish();
+                                    }
+                                    else {
+                                        Toast.makeText(getApplicationContext(), "Incorrect Login..\nTry Again", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    });
                 }
 
 
@@ -62,9 +81,24 @@ public class Login extends Activity {
         startActivity(i);
     }
 
-    public boolean validateLogin(String userName, String userPass) {
+    public void validateLogin(final String userName,final String userPass, final ValidateCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                LoggerViewModel loggerViewModel = ViewModelProviders.of(Login.this, new LoggerFactory(Login.this.getApplication(), userName, userPass)).get(LoggerViewModel.class);
+                if(loggerViewModel.getName() != null && !loggerViewModel.getName().isEmpty())
+                {
+                    callback.onValidateResult(true);
+                }
+                else
+                {
+                    callback.onValidateResult(false);
+                }
+            }
+        }).start();
 
-        databasehelper db = new databasehelper(getApplicationContext());
+
+       /* databasehelper db = new databasehelper(getApplicationContext());
         SQLiteDatabase sb = db.getReadableDatabase();
 
         //SELECT
@@ -95,7 +129,7 @@ public class Login extends Activity {
             return false;
         } finally {
             db.close();
-        }
+        }*/
     }//validate Login
     public void onBackPressed() {
         Log.d("CDA", "onBackPressed Called");
@@ -103,5 +137,10 @@ public class Login extends Activity {
         setIntent.addCategory(Intent.CATEGORY_HOME);
         setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(setIntent);
+    }
+
+    public interface ValidateCallback
+    {
+        public void onValidateResult(boolean result);
     }
 }

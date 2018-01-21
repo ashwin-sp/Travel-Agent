@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class databasehelper extends SQLiteOpenHelper {
 
 
-    private static int DB_VERSION = 2;
+    private static int DB_VERSION = 1;
     private static String DB_NAME = "Travel2.db";
     Context c = null;
     String userName;
