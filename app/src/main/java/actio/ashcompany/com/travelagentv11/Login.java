@@ -96,40 +96,6 @@ public class Login extends AppCompatActivity {
                 }
             }
         }).start();
-
-
-       /* databasehelper db = new databasehelper(getApplicationContext());
-        SQLiteDatabase sb = db.getReadableDatabase();
-
-        //SELECT
-        String[] columns = {"username"};
-
-        //WHERE clause
-        String selection = "username=? AND password=?";
-
-        //WHERE clause arguments
-        String[] selectionArgs = {userName, userPass};
-        Cursor c;
-
-        try{
-            //SELECT userId FROM login WHERE username=userName AND password=userPass
-            c = sb.query("LOGGER", columns, selection, selectionArgs, null, null, null);
-            c.moveToFirst();
-
-            int i = c.getCount();
-            c.close();
-            if(i <= 0){
-                Toast.makeText(getApplicationContext(), "Incorrect Login..\nTry Again", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-
-            return true;
-        }catch(Exception e){
-            e.printStackTrace();
-            return false;
-        } finally {
-            db.close();
-        }*/
     }//validate Login
     public void onBackPressed() {
         Log.d("CDA", "onBackPressed Called");

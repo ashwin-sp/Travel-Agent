@@ -1,5 +1,6 @@
 package actio.ashcompany.com.travelagentv11;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -165,6 +166,7 @@ public class Delhi extends AppCompatActivity {
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        fragment.setRetainInstance(true);
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         setTitle(mPlanetTitles[position]);
@@ -195,6 +197,7 @@ public class Delhi extends AppCompatActivity {
     /**
      * Fragment that appears in the "content_frame", shows a planet
      */
+    @SuppressLint("ValidFragment")
     public class PlanetFragment extends Fragment {
         public static final String ARG_PLANET_NUMBER = "planet_number";
         ArrayList<PlacesPOJO> arrayList = new ArrayList<>();
@@ -349,7 +352,6 @@ public class Delhi extends AppCompatActivity {
             else if(delhi.equals("Register")) {
                 getActivity().setTitle(delhi);
                 t.setText("The registration page");
-                // final databasehelper db= new databasehelper(getActivity());
                 final LoggerViewModel loggerViewModel = ViewModelProviders.of(Delhi.this, new LoggerFactory(this.getActivity().getApplication(), Login.un, Login.pd)).get(LoggerViewModel.class);
                 b4.setVisibility(View.VISIBLE);
                 b4.setOnClickListener(new View.OnClickListener() {

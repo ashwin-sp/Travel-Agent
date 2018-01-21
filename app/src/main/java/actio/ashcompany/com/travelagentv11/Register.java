@@ -22,8 +22,6 @@ import actio.ashcompany.com.travelagentv11.model.LoggerViewModel;
 public class Register extends AppCompatActivity {
 
     EditText name,age,address,username,password,phno;
-   /* databasehelper db;
-    SQLiteDatabase sb;*/
     String gender;
     static int regime=0;
     static int[] count1=new int[1000];
@@ -85,31 +83,7 @@ public class Register extends AppCompatActivity {
                            ,Integer.parseInt(phno.getText().toString())
 
             ));
-     /*       sb.execSQL("insert into LOGGER"
-                    + " values('"
-                    + name.getText().toString()
-                    + "',"
-                    + "'"
-                    + age.getText().toString()
-                    + "',"
-                    + "'"
-                    + gender
-                    + "',"
-                    + "'"
-                    + address.getText().toString()
-                    + "',"
-                    + "'"
-                    + username.getText().toString()
-                    + "',"
-                    + "'"
-                    + password.getText().toString()
-                    + "',"
-                    + "'"
-                    + regime
-                    + "',"
-                    + "'"
-                    + phno.getText().toString()
-                    + "')");*/
+
 
             count1[loggerViewModel.getReg()]=0;
             count2[loggerViewModel.getReg()]=0;
@@ -158,11 +132,8 @@ public class Register extends AppCompatActivity {
         return true;
     }
     public void navigate() {
-
         startActivity(new Intent(Register.this, Login.class));
         finish();
-      /*  db.close();
-        sb.close();*/
     }
 
 }

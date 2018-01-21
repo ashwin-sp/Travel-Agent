@@ -24,9 +24,6 @@ public class Information extends Fragment {
                              Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.activity_information, container, false);
-       // databasehelper db = new databasehelper(getActivity());
-
-
         accessDB(new Callback() {
             @Override
             public void postExecute(LoggerViewModel loggerViewModel) {
