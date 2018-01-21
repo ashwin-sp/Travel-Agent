@@ -352,7 +352,6 @@ public class Delhi extends AppCompatActivity {
             else if(delhi.equals("Register")) {
                 getActivity().setTitle(delhi);
                 t.setText("The registration page");
-                final LoggerViewModel loggerViewModel = ViewModelProviders.of(Delhi.this, new LoggerFactory(this.getActivity().getApplication(), Login.un, Login.pd)).get(LoggerViewModel.class);
                 b4.setVisibility(View.VISIBLE);
                 b4.setOnClickListener(new View.OnClickListener() {
                     @Override
